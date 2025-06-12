@@ -33,6 +33,8 @@ public class FindHighestScore {
 		}
 		
 		  System.out.println(bestName + " has the highest score of " + maxScore);
+		  
+		  input.close();
 
 	}
 
