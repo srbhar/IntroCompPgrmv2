@@ -14,7 +14,7 @@ public class EightThirtySix_LatinSquare {
         input.nextLine();
 
         char[][] square = new char[n][n]; // new array of characters
-        System.out.println("Enter " + n + " rows of letters (space-separated):");
+        System.out.println("Enter " + n + " rows of letters separated by spaces: ");
 
         for (int i = 0; i < n; i++) {
             String[] row = input.nextLine().split(" ");
