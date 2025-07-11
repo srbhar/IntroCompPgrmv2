@@ -158,10 +158,6 @@ public class TicTacToeRigged {
 	
 	public static void play(int[][] board, int movenumber) {
 		
-		if (tryToWin(board)) return;
-		if (tryToBlockUserWin(board)) return;
-		if (blockUserFork(board)) return;
-		
 		if (movenumber == 0) {
 			if (board[1][1] == 0) {
 				board[1][1] = 1;
@@ -176,7 +172,7 @@ public class TicTacToeRigged {
 		// if there are two one's in a column, take the winning spot!
 		boolean two1incol0 = two1incol(board, 0);
 		boolean two1incol1 = two1incol(board, 1);
-		boolean two1incol2 = two1incol(board, 1);
+		boolean two1incol2 = two1incol(board, 2);
 		// if there are two one's in a major or minor diagonal, take the winning spot!
 		boolean two1inmajordiag = two1inmajordiag(board);
 		boolean two1inminordiag = two1inminordiag(board);
@@ -213,7 +209,7 @@ public class TicTacToeRigged {
 		// if all the slots in a major or minor diagonal are empty, fill one of the slots with a one
 		boolean majordiagempty = majordiagempty(board);
 		boolean minordiagempty = minordiagempty(board);
-		
+
 		if (two1inrow0) {
 			rowwin(board, 0);
 		}
@@ -262,6 +258,7 @@ public class TicTacToeRigged {
 		else if (two2inminordiag) {
 			fillemptyminordiagspot(board);
 		}
+		else if (blockfork(board)) return;
 		else if (onesinrow0) {
 			fillrowwith1(board, 0);
 		}
@@ -321,54 +318,58 @@ public class TicTacToeRigged {
 		}
 	}
 	
-	public static boolean tryToWin(int[][] board) {
-		for (int i = 0; i < 3; i++) {
-			if (two1inrow(board, i)) { rowwin(board, i); return true; }
-			if (two1incol(board, i)) { colwin(board, i); return true; }
-		}
-		if (two1inmajordiag(board)) { majordiagwin(board); return true; }
-		if (two1inminordiag(board)) { minordiagwin(board); return true; }
-		return false;
+	public static boolean blockfork(int[][] board) {
+	    for (int r = 0; r < 3; r++) {
+	        for (int c = 0; c < 3; c++) {
+	            if (board[r][c] == 0) {
+	                board[r][c] = 2;
+	                int wincount = countwinmoves(board, 2);
+	                board[r][c] = 0;
+
+	                if (wincount >= 2) {
+	                    // more than two ways for the user to win
+	                    board[r][c] = 1;
+	                    return true;
+	                }
+	            }
+	        }
+	    }
+	    return false;
 	}
 	
+	public static int countwinmoves(int[][] board, int value) {
+	    int count = 0;
+	    // rows
+	    for (int i = 0; i < 3; i++) {
+	        if ((board[i][0] == value && board[i][1] == value && board[i][2] == 0) ||
+	            (board[i][0] == value && board[i][2] == value && board[i][1] == 0) ||
+	            (board[i][1] == value && board[i][2] == value && board[i][0] == 0)) {
+	            count++;
+	        }
+	    }
+	    // columns
+	    for (int i = 0; i < 3; i++) {
+	        if ((board[0][i] == value && board[1][i] == value && board[2][i] == 0) ||
+	            (board[0][i] == value && board[2][i] == value && board[1][i] == 0) ||
+	            (board[1][i] == value && board[2][i] == value && board[0][i] == 0)) {
+	            count++;
+	        }
+	    }
+	    // diagonals
+	    if ((board[0][0] == value && board[1][1] == value && board[2][2] == 0) ||
+	        (board[0][0] == value && board[2][2] == value && board[1][1] == 0) ||
+	        (board[1][1] == value && board[2][2] == value && board[0][0] == 0)) {
+	        count++;
+	    }
 
-	public static boolean tryToBlockUserWin(int[][] board) {
-		for (int i = 0; i < 3; i++) {
-			if (two2inrow(board, i)) { fillemptyrowspot(board, i); return true; }
-			if (two2incol(board, i)) { fillemptycolspot(board, i); return true; }
-		}
-		if (two2inmajordiag(board)) { fillemptymajordiagspot(board); return true; }
-		if (two2inminordiag(board)) { fillemptyminordiagspot(board); return true; }
-		return false;
-	}
-	
-	public static boolean blockUserFork(int[][] board) {
-		int[][] forks = {
-			{0, 0}, {0, 2}, {2, 0}, {2, 2}
-		};
+	    if ((board[0][2] == value && board[1][1] == value && board[2][0] == 0) ||
+	        (board[0][2] == value && board[2][0] == value && board[1][1] == 0) ||
+	        (board[1][1] == value && board[2][0] == value && board[0][2] == 0)) {
+	        count++;
+	    }
 
-		// check if center is empty
-		if (board[1][1] == 0) {
-			board[1][1] = 1;
-			return true;
-		}
-
-		// check if opponent has any 2 corners with the center
-		int userCorners = 0;
-		for (int[] corner : forks) {
-			if (board[corner[0]][corner[1]] == 2) {
-				userCorners++;
-			}
-		}
-		if (userCorners >= 2) {
-			// take edge
-			if (board[0][1] == 0) { board[0][1] = 1; return true; }
-			if (board[1][0] == 0) { board[1][0] = 1; return true; }
-			if (board[1][2] == 0) { board[1][2] = 1; return true; }
-			if (board[2][1] == 0) { board[2][1] = 1; return true; }
-		}
-
-		return false;
+	    return count;
+	    
 	}
 	
 	public static boolean two1inrow(int[][] board, int row) {
