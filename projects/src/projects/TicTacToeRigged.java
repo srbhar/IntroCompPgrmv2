@@ -158,7 +158,8 @@ public class TicTacToeRigged {
 	
 	public static void play(int[][] board, int movenumber) {
 		
-		if (movenumber == 0) {
+		// smartest move would be to take the middle if possible
+		if (movenumber == 0 || (movenumber == 1 && board[1][1] == 0)) {
 			if (board[1][1] == 0) {
 				board[1][1] = 1;
 				return;
@@ -209,105 +210,53 @@ public class TicTacToeRigged {
 		// if all the slots in a major or minor diagonal are empty, fill one of the slots with a one
 		boolean majordiagempty = majordiagempty(board);
 		boolean minordiagempty = minordiagempty(board);
-
-		if (two1inrow0) {
-			rowwin(board, 0);
+		
+		if (two1inrow0) { rowwin(board, 0); }
+		else if (two1inrow1) { rowwin(board, 1); }
+		else if (two1inrow2) { rowwin(board, 2); }
+		else if (two1incol0) { colwin(board, 0); }
+		else if (two1incol1) { colwin(board, 1); }
+		else if (two1incol2) { colwin(board, 2); }
+		else if (two1inmajordiag) { majordiagwin(board); }
+		else if (two1inminordiag) { minordiagwin(board); }
+		else if (two2inrow0) { fillemptyrowspot(board, 0); }
+		else if (two2inrow1) { fillemptyrowspot(board, 1); }
+		else if (two2inrow2) { fillemptyrowspot(board, 2); }
+		else if (two2incol0) { fillemptycolspot(board, 0); }
+		else if (two2incol1) { fillemptycolspot(board, 1); }
+		else if (two2incol2) { fillemptycolspot(board, 2); }
+		else if (two2inmajordiag) { fillemptymajordiagspot(board); }
+		else if (two2inminordiag) { fillemptyminordiagspot(board); }
+		
+		// fork handling (if user has two corners)
+		else if ((board[0][0] == 2 && board[0][2] == 2) || (board[0][0] == 2 && board[2][0] == 2) || 
+				(board[0][0] == 2 && board[2][2] == 2) || (board[0][2] == 2 && board[2][0] == 2) || 
+				(board[0][2] == 2 && board[2][2] == 2) || (board[2][0] == 2 && board[2][2] == 2)) {
+			if (onesinrow0) { fillrowwith1(board, 0); }
+			else if (onesinrow1) { fillrowwith1(board, 1); }
+			else if (onesinrow2) { fillrowwith1(board, 2); }
+			else if (onesincol0) { fillcolwith1(board, 0); }
+			else if (onesincol1) { fillcolwith1(board, 1); }
+			else if (onesincol2) { fillcolwith1(board, 2); }
 		}
-		else if (two1inrow1) {
-			rowwin(board, 1);
-		}
-		else if (two1inrow2) {
-			rowwin(board, 2);
-		}
-		else if (two1incol0) {
-			colwin(board, 0);
-		}
-		else if (two1incol1) {
-			colwin(board, 1);
-		}
-		else if (two1incol2) {
-			colwin(board, 2);
-		}
-		else if (two1inmajordiag) {
-			majordiagwin(board);
-		}
-		else if (two1inminordiag) {
-			minordiagwin(board);
-		}
-		else if (two2inrow0) {
-			fillemptyrowspot(board, 0);
-		}
-		else if (two2inrow1) {
-			fillemptyrowspot(board, 1);
-		}
-		else if (two2inrow2) {
-			fillemptyrowspot(board, 2);
-		}
-		else if (two2incol0) {
-			fillemptycolspot(board, 0);
-		}
-		else if (two2incol1) {
-			fillemptycolspot(board, 1);
-		}
-		else if (two2incol2) {
-			fillemptycolspot(board, 2);
-		}
-		else if (two2inmajordiag) {
-			fillemptymajordiagspot(board);
-		}
-		else if (two2inminordiag) {
-			fillemptyminordiagspot(board);
-		}
-		else if (blockfork(board)) return;
-		else if (onesinrow0) {
-			fillrowwith1(board, 0);
-		}
-		else if (onesinrow1) {
-			fillrowwith1(board, 1);
-		}
-		else if (onesinrow2) {
-			fillrowwith1(board, 2);
-		}
-		else if (onesincol0) {
-			fillcolwith1(board, 0);
-		}
-		else if (onesincol1) {
-			fillcolwith1(board, 1);
-		}
-		else if (onesincol2) {
-			fillcolwith1(board, 2);
-		}
-		else if (onesinmajordiag) {
-			fillmajordiagwith1(board);
-		}
-		else if (onesinminordiag) {
-			fillminordiagwith1(board);
-		}
-		else if (row0empty) {
-			fillemptyrow(board, 0);
-		}
-		else if (row1empty) {
-			fillemptyrow(board, 1);
-		}
-		else if (row2empty) {
-			fillemptyrow(board, 2);
-		}
-		else if (col0empty) {
-			fillemptycol(board, 0);
-		}
-		else if (col1empty) {
-			fillemptycol(board, 1);
-		}
-		else if (col2empty) {
-			fillemptycol(board, 2);
-		}
-		else if (majordiagempty) {
-			fillemptymajordiag(board);
-		}
-		else if (minordiagempty) {
-			fillemptyminordiag(board);
-		}
-		else {
+		
+		else if (onesinrow0) { fillrowwith1(board, 0); }
+		else if (onesinrow1) { fillrowwith1(board, 1); }
+		else if (onesinrow2) { fillrowwith1(board, 2); }
+		else if (onesincol0) { fillcolwith1(board, 0); }
+		else if (onesincol1) { fillcolwith1(board, 1); }
+		else if (onesincol2) { fillcolwith1(board, 2); }
+		else if (onesinmajordiag) { fillmajordiagwith1(board); }
+		else if (onesinminordiag) { fillminordiagwith1(board); }
+		else if (row0empty) { fillemptyrow(board, 0); }
+		else if (row1empty) { fillemptyrow(board, 1); }
+		else if (row2empty) { fillemptyrow(board, 2); }
+		else if (col0empty) { fillemptycol(board, 0); }
+		else if (col1empty) { fillemptycol(board, 1); }
+		else if (col2empty) { fillemptycol(board, 2); }
+		else if (majordiagempty) { fillemptymajordiag(board); }
+		else if (minordiagempty) { fillemptyminordiag(board); }
+		else { // if nothing applies, just play something random
 			int row = (int)(Math.random()*3);
 			int col = (int)(Math.random()*3);
 			while (board[row][col] != 0) {
@@ -316,60 +265,6 @@ public class TicTacToeRigged {
 			}
 			board[row][col] = 1;
 		}
-	}
-	
-	public static boolean blockfork(int[][] board) {
-	    for (int r = 0; r < 3; r++) {
-	        for (int c = 0; c < 3; c++) {
-	            if (board[r][c] == 0) {
-	                board[r][c] = 2;
-	                int wincount = countwinmoves(board, 2);
-	                board[r][c] = 0;
-
-	                if (wincount >= 2) {
-	                    // more than two ways for the user to win
-	                    board[r][c] = 1;
-	                    return true;
-	                }
-	            }
-	        }
-	    }
-	    return false;
-	}
-	
-	public static int countwinmoves(int[][] board, int value) {
-	    int count = 0;
-	    // rows
-	    for (int i = 0; i < 3; i++) {
-	        if ((board[i][0] == value && board[i][1] == value && board[i][2] == 0) ||
-	            (board[i][0] == value && board[i][2] == value && board[i][1] == 0) ||
-	            (board[i][1] == value && board[i][2] == value && board[i][0] == 0)) {
-	            count++;
-	        }
-	    }
-	    // columns
-	    for (int i = 0; i < 3; i++) {
-	        if ((board[0][i] == value && board[1][i] == value && board[2][i] == 0) ||
-	            (board[0][i] == value && board[2][i] == value && board[1][i] == 0) ||
-	            (board[1][i] == value && board[2][i] == value && board[0][i] == 0)) {
-	            count++;
-	        }
-	    }
-	    // diagonals
-	    if ((board[0][0] == value && board[1][1] == value && board[2][2] == 0) ||
-	        (board[0][0] == value && board[2][2] == value && board[1][1] == 0) ||
-	        (board[1][1] == value && board[2][2] == value && board[0][0] == 0)) {
-	        count++;
-	    }
-
-	    if ((board[0][2] == value && board[1][1] == value && board[2][0] == 0) ||
-	        (board[0][2] == value && board[2][0] == value && board[1][1] == 0) ||
-	        (board[1][1] == value && board[2][0] == value && board[0][2] == 0)) {
-	        count++;
-	    }
-
-	    return count;
-	    
 	}
 	
 	public static boolean two1inrow(int[][] board, int row) {
