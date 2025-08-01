@@ -22,6 +22,7 @@ List the ready features here:
 
 ## Screenshots
 <img width="793" height="291" alt="image" src="https://github.com/user-attachments/assets/ffe1474d-a452-4cab-9d78-5635cc75610a" />
+
 This image shows a sample output, where the player stands, but the dealer ends up having a higher card value than the player, causing the player to lose.
 The program then displays a scoreboard with the updated loss that the player just underwent.
 
