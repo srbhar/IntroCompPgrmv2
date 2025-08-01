@@ -11,6 +11,8 @@ public class TwelveThirty_OccurrencesOfEachLetter {
 		System.out.print("Enter a file name: ");
 		String filename = input.next();
 		input.close();
+		
+		// read each character and add to occurrence array
 
 		int[] occurrences = new int[26];
 		
@@ -22,12 +24,12 @@ public class TwelveThirty_OccurrencesOfEachLetter {
 		        char ch = string.charAt(i);
 		        if (Character.isLetter(ch)) {
 		            ch = Character.toUpperCase(ch);
-		            occurrences[ch - 'A']++;
+		            occurrences[ch - 'A']++; // gives the right index for alphabet
 		        }
 		}
 
 	}
-		
+		// print final occurrences with proper indices
 		char[] alphabets = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 		for (int i = 0; i < alphabets.length; i++) {
 			System.out.println("Number of " + alphabets[i] + "'s: " + occurrences[i]);
